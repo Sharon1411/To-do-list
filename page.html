@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do List</title>
+    <style>
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url("bbbb.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            filter: blur(3px); /* Adjust the blur radius as needed */
+            z-index: -1;
+        }
+        #container {
+            background-color:#adc4c86f;
+            text-align: center;
+            border-radius: 4px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+            padding: 50px;
+            text-align: center;
+            max-width: 300px;
+        }
+
+        input[type="text"],
+        input[type="datetime-local"] {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid blanchedalmond;
+        border-radius: 3px;
+        height: 20px; /* Adjust the height as needed */
+        font-size: 16px;
+        margin-bottom: 10px;
+        }
+        button {
+            background-color: #1c6d9599;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0e486c;
+        }
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        
+        }
+        ul li::before{
+            content: '';
+            position:absolute;
+            height: 28px;
+            width: 28px;
+            border-radius: 50%;
+            background-image: url(tick.jpg);
+            background-size: cover;
+            background-position: center;
+            top: 12px;
+            left: 8px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1><i>To-Do List</i> </h1>
+        <br>
+        <input type="text" id="task" placeholder="Add a new task">
+        <br>
+        <input type="datetime-local" id="datetime" placeholder="Select a date and time">
+        <button onclick="addTask()">Add</button>
+
+        <ul id="taskList">
+            
+        </ul>
+
+       
+    </div>
+
+    <script>
+        const tasks = [];
+
+        function addTask() {
+            var taskInput = document.getElementById("task");
+            var datetimeInput = document.getElementById("datetime");
+            var taskText = taskInput.value;
+            var taskDateTime = datetimeInput.value;
+
+            if (taskText.trim() === "") {
+                alert("Please enter a task.");
+            } else if (!taskDateTime) {
+                alert("Please select a date and time.");
+            } else {
+                const isDuplicate = tasks.some(task => task.dateTime === taskDateTime);
+                if (isDuplicate) {
+                    alert("This task with the same date and time already exists.");
+                } else {
+                    var taskList = document.getElementById("taskList");
+                    var listItem = document.createElement("li");
+
+                    // Add the "Delete" button
+                    listItem.innerHTML = `Task: ${taskText} -<br> Due on: ${taskDateTime} <br><br><button onclick="deleteTask(this)"> Delete </button>`;
+                    taskList.appendChild(listItem);
+
+                    // Add the task to the list of tasks
+                    tasks.push({ text:taskText, dateTime:taskDateTime });
+
+                    taskInput.value = ""; // Clear the task input field
+                    datetimeInput.value = ""; // Clear the datetime input field
+                }
+            }
+        }
+
+        function deleteTask(button) {
+            var listItem = button.parentNode;
+            var taskText = listItem.textContent.split("- Due on:")[0]; // Extract the task text
+
+            // Find the task index in the tasks array
+            var taskIndex = tasks.findIndex(task => task.text === taskText);
+
+            if (taskIndex !== -1) {
+                tasks.splice(taskIndex, 1); // Remove the task from the tasks array
+            }
+
+            listItem.remove(); // Remove the list item from the display
+        }
+    </script>
+</body>
+</html>
